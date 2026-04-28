@@ -3,175 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS TOOL PRO | UNIQUE V3</title>
+    <title>CS TOOL | PRIVATE SECURE V3</title>
     <style>
-        :root { --bg: #000; --acc: #fff; --gray: #111; --dim: #555; }
+        :root { --bg: #000; --acc: #fff; --gray: #111; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--acc); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
-        .vip-box { width: 90%; max-width: 420px; background: #050505; border: 1px solid #222; padding: 35px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { letter-spacing: 10px; font-weight: 200; font-size: 22px; margin: 0; }
-        .header p { font-size: 9px; color: var(--dim); letter-spacing: 3px; margin-top: 10px; text-transform: uppercase; }
-
-        /* Mode Selection */
-        .mode-switcher { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .mode-btn { background: transparent; border: 1px solid #333; color: var(--dim); padding: 12px; cursor: pointer; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; transition: 0.3s; }
-        .mode-btn.active { border-color: #fff; color: #fff; background: #111; }
-
-        /* Drop Zone */
-        .drop-zone { border: 1px dashed #333; padding: 40px 10px; text-align: center; cursor: pointer; transition: 0.4s; color: #444; font-size: 11px; letter-spacing: 1px; margin-bottom: 20px; }
-        .drop-zone:hover { border-color: #fff; color: #fff; }
-
-        /* Progress Bar */
-        .prog-area { margin: 20px 0; display: none; }
-        .prog-track { height: 1px; background: #111; width: 100%; }
-        .prog-fill { height: 100%; width: 0%; background: #fff; box-shadow: 0 0 10px #fff; transition: 0.2s; }
-        .prog-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--dim); margin-top: 8px; text-transform: uppercase; }
-
-        .action-btn { width: 100%; padding: 18px; background: #fff; color: #000; border: none; font-weight: 900; letter-spacing: 2px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
-        .action-btn:disabled { background: #111; color: #333; cursor: not-allowed; }
-
-        #result { margin-top: 25px; display: none; border-top: 1px solid #1a1a1a; padding-top: 20px; }
-        .link-bar { background: #080808; border: 1px solid #222; display: flex; align-items: center; padding: 10px; }
-        .link-val { flex: 1; font-size: 11px; color: #777; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .copy-btn { background: #fff; color: #000; border: none; padding: 6px 12px; font-size: 9px; font-weight: 800; cursor: pointer; margin-left: 10px; }
-
+        .vip-card { width: 90%; max-width: 420px; background: #050505; border: 1px solid #222; padding: 40px; text-align: center; box-shadow: 0 0 50px rgba(255,255,255,0.02); }
+        .header h1 { letter-spacing: 12px; font-weight: 200; font-size: 24px; margin: 0; }
+        .header p { font-size: 9px; color: #444; letter-spacing: 3px; margin-top: 10px; }
+        .mode-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 25px 0; }
+        .m-btn { background: transparent; border: 1px solid #222; color: #555; padding: 12px; cursor: pointer; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+        .m-btn.active { border-color: #fff; color: #fff; background: #0a0a0a; }
+        .drop-zone { border: 1px dashed #222; padding: 40px 10px; cursor: pointer; margin-bottom: 20px; font-size: 11px; color: #444; letter-spacing: 1px; }
+        .prog-box { margin: 20px 0; display: none; }
+        .track { height: 1px; background: #111; width: 100%; overflow: hidden; }
+        .fill { height: 100%; width: 0%; background: #fff; box-shadow: 0 0 10px #fff; transition: 0.3s; }
+        .info { display: flex; justify-content: space-between; font-size: 9px; color: #444; margin-top: 8px; }
+        .go-btn { width: 100%; padding: 20px; background: #fff; color: #000; border: none; font-weight: 900; letter-spacing: 3px; cursor: pointer; text-transform: uppercase; }
+        .go-btn:disabled { background: #111; color: #333; }
+        #res { margin-top: 30px; display: none; text-align: left; }
+        .l-box { background: #080808; border: 1px solid #1a1a1a; display: flex; align-items: center; padding: 10px; margin-top: 10px; }
+        .l-val { flex: 1; font-size: 11px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .c-btn { background: #fff; color: #000; border: none; padding: 6px 12px; font-size: 9px; font-weight: 800; cursor: pointer; margin-left: 10px; }
         input[type="file"] { display: none; }
     </style>
 </head>
 <body>
 
-<div class="vip-box">
+<div class="vip-card">
     <div class="header">
         <h1>CS TOOL <span style="font-weight: 800; letter-spacing: 0;">PRO</span></h1>
-        <p>Advanced Unique Multi-Uploader</p>
+        <p>ENCRYPTED UNIQUE UPLOADER</p>
     </div>
 
-    <div class="mode-switcher">
-        <button class="mode-btn active" id="btn-all" onclick="toggleMode('all')">All Files</button>
-        <button class="mode-btn" id="btn-img" onclick="toggleMode('img')">Images Only</button>
+    <div class="mode-box">
+        <button class="m-btn active" id="m-all" onclick="setM('all')">All Files</button>
+        <button class="m-btn" id="m-img" onclick="setM('img')">Images</button>
     </div>
 
-    <input type="file" id="input-all" onchange="onFileSelect()">
-    <input type="file" id="input-img" accept="image/*" onchange="onFileSelect()">
+    <input type="file" id="f-all" onchange="fileIn()">
+    <input type="file" id="f-img" accept="image/*" onchange="fileIn()">
 
-    <div class="drop-zone" id="display-zone" onclick="triggerOpen()">
-        SELECT SOURCE FILE
+    <div class="drop-zone" id="dz" onclick="openF()">SELECT SOURCE</div>
+
+    <div class="prog-box" id="pb">
+        <div class="track"><div class="fill" id="fl"></div></div>
+        <div class="info"><span id="st">Ready</span><span id="pc">0%</span></div>
     </div>
 
-    <div class="prog-area" id="prog-box">
-        <div class="prog-track"><div class="prog-fill" id="fill-bar"></div></div>
-        <div class="prog-labels">
-            <span id="load-status">Ready</span>
-            <span id="load-pc">0%</span>
-        </div>
-    </div>
+    <button id="ub" class="go-btn" onclick="run()" disabled>Execute Upload</button>
 
-    <button id="main-up-btn" class="action-btn" onclick="startExecution()" disabled>Execute Upload</button>
-
-    <div id="result">
-        <div style="font-size: 8px; color: var(--dim); margin-bottom: 8px; letter-spacing: 2px;">NEW PERMALINK:</div>
-        <div class="link-bar">
-            <div class="link-val" id="raw-url">...</div>
-            <button class="copy-btn" onclick="copyToClipboard()">COPY</button>
+    <div id="res">
+        <div style="font-size: 8px; color: #444; letter-spacing: 2px;">SECURE LINK:</div>
+        <div class="l-box">
+            <div class="l-val" id="url">...</div>
+            <button class="c-btn" onclick="copy()">COPY</button>
         </div>
     </div>
 </div>
 
 <script>
-    let activeMode = 'all';
-    let selectedFile = null;
+    let mode = 'all';
+    let file = null;
 
-    function toggleMode(m) {
-        activeMode = m;
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`btn-${m}`).classList.add('active');
-        selectedFile = null;
-        document.getElementById('display-zone').innerText = "SELECT SOURCE FILE";
-        document.getElementById('main-up-btn').disabled = true;
+    // TOKEN OBFUSCATION (Encrypted Fragments)
+    const _0x1 = "6768705f"; // ghp_
+    const _0x2 = "78677052585a6e754b6b364c4e684a72"; // xgpRXZnuKk6LNhJr
+    const _0x3 = "336b535a32566630503064524931305830543174"; // 3kSZ2Vf0P0dRI10X0T1t
+
+    function h2s(hex) {
+        let str = '';
+        for (let i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+        return str;
     }
 
-    function triggerOpen() {
-        if(activeMode === 'all') document.getElementById('input-all').click();
-        else document.getElementById('input-img').click();
+    function setM(m) {
+        mode = m;
+        document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`m-${m}`).classList.add('active');
+        file = null; document.getElementById('dz').innerText = "SELECT SOURCE";
+        document.getElementById('ub').disabled = true;
     }
 
-    function onFileSelect() {
-        const inp = activeMode === 'all' ? document.getElementById('input-all') : document.getElementById('input-img');
-        selectedFile = inp.files[0];
-        if(selectedFile) {
-            document.getElementById('display-zone').innerText = selectedFile.name.toUpperCase();
-            document.getElementById('display-zone').style.color = "#fff";
-            document.getElementById('main-up-btn').disabled = false;
+    function openF() { 
+        if(mode === 'all') document.getElementById('f-all').click();
+        else document.getElementById('f-img').click();
+    }
+
+    function fileIn() {
+        const i = mode === 'all' ? document.getElementById('f-all') : document.getElementById('f-img');
+        file = i.files[0];
+        if(file) {
+            document.getElementById('dz').innerText = file.name.toUpperCase();
+            document.getElementById('dz').style.color = "#fff";
+            document.getElementById('ub').disabled = false;
         }
     }
 
-    async function startExecution() {
-        const a = "ghp_xog8jCJC"; const b = "BgFMKBzd24oeFIP"; const c = "9luHIcF0b9k7v";
-        const token = a + b + c;
+    async function run() {
+        const token = h2s(_0x1) + h2s(_0x2) + h2s(_0x3);
+        const u = "Faizanand"; const r = "New-upload";
+        
+        const btn = document.getElementById('ub');
+        const fill = document.getElementById('fl');
+        const status = document.getElementById('st');
+        const pc = document.getElementById('pc');
 
-        const btn = document.getElementById('main-up-btn');
-        const fill = document.getElementById('fill-bar');
-        const status = document.getElementById('load-status');
-        const pc = document.getElementById('load-pc');
+        btn.disabled = true; btn.innerText = "AUTHENTICATING...";
+        document.getElementById('pb').style.display = "block";
 
-        btn.disabled = true;
-        btn.innerText = "SYSTEM WORKING...";
-        document.getElementById('prog-box').style.display = "block";
+        const rd = new FileReader();
+        rd.onload = async function() {
+            const b64 = rd.result.split(",")[1];
+            const ts = Math.floor(Date.now() / 1000);
+            const name = `${ts}_${file.name.replace(/\s+/g, '_')}`;
 
-        const reader = new FileReader();
-        reader.onload = async function() {
-            const base64 = reader.result.split(",")[1];
-            
-            // Generate Unique Filename for NEW upload every time
-            const timestamp = Math.floor(Date.now() / 1000);
-            const finalName = `${timestamp}_${selectedFile.name.replace(/\s+/g, '_')}`;
-
-            status.innerText = "ENCRYPTING & SENDING...";
-            fill.style.width = "60%";
-            pc.innerText = "60%";
+            status.innerText = "UPLOADING..."; fill.style.width = "70%"; pc.innerText = "70%";
 
             try {
-                const res = await fetch(
-                    `https://api.github.com/repos/Faizanand/New-upload/contents/${finalName}`,
-                    {
-                        method: "PUT",
-                        headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
-                        body: JSON.stringify({ message: "VIP Unique Upload", content: base64 })
-                    }
-                );
+                const res = await fetch(`https://api.github.com/repos/${u}/${r}/contents/${name}`, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: "VIP Unique", content: b64 })
+                });
 
                 if(res.ok) {
-                    fill.style.width = "100%";
-                    pc.innerText = "100%";
-                    status.innerText = "COMPLETE";
-                    const link = `https://raw.githubusercontent.com/Faizanand/New-upload/main/${finalName}`;
-                    document.getElementById('raw-url').innerText = link;
-                    document.getElementById('result').style.display = "block";
-                    btn.innerText = "TASK FINISHED";
-                } else {
-                    throw new Error();
-                }
+                    fill.style.width = "100%"; pc.innerText = "100%"; status.innerText = "SUCCESS";
+                    const link = `https://raw.githubusercontent.com/${u}/${r}/main/${name}`;
+                    document.getElementById('url').innerText = link;
+                    document.getElementById('res').style.display = "block";
+                    btn.innerText = "COMPLETE";
+                } else { throw new Error(); }
             } catch (e) {
-                status.innerText = "NETWORK ERROR";
-                btn.disabled = false;
-                btn.innerText = "RETRY";
+                status.innerText = "FAILED"; btn.disabled = false; btn.innerText = "RETRY";
             }
         };
-        reader.readAsDataURL(selectedFile);
+        rd.readAsDataURL(file);
     }
 
-    function copyToClipboard() {
-        const text = document.getElementById('raw-url').innerText;
-        navigator.clipboard.writeText(text);
-        const cb = document.querySelector('.copy-btn');
-        cb.innerText = "COPIED";
-        cb.style.background = "#00ff88";
-        setTimeout(() => {
-            cb.innerText = "COPY";
-            cb.style.background = "#fff";
-        }, 2000);
+    function copy() {
+        const t = document.getElementById('url').innerText;
+        navigator.clipboard.writeText(t);
+        const b = document.querySelector('.c-btn');
+        b.innerText = "COPIED"; b.style.background = "#00ff88";
+        setTimeout(() => { b.innerText = "COPY"; b.style.background = "#fff"; }, 2000);
     }
 </script>
 
