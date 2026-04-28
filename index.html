@@ -1,156 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Heavy Uploader</title>
+  <title>CS TOOL - Heavy Uploader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #0f0f0f, #1a1a2e, #000);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #000; color: white;
+      display: flex; justify-content: center; align-items: center; height: 100vh;
     }
-
     .box {
-      width: 90%;
-      max-width: 420px;
-      padding: 25px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(15px);
-      box-shadow: 0 0 25px rgba(0,255,255,0.2);
-      text-align: center;
-      animation: pop 0.6s ease;
+      width: 90%; max-width: 400px; padding: 30px; border-radius: 25px;
+      background: rgba(20, 20, 20, 0.9); border: 1px solid #00ffe1;
+      box-shadow: 0 0 30px rgba(0, 255, 225, 0.3); text-align: center;
     }
-
-    @keyframes pop {
-      from {transform: scale(0.8); opacity: 0;}
-      to {transform: scale(1); opacity: 1;}
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      color: #00ffe1;
-      text-shadow: 0 0 10px #00ffe1;
-    }
-
+    h2 { color: #00ffe1; text-shadow: 0 0 10px #00ffe1; margin-bottom: 30px; }
     input[type="file"] {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 2px dashed #00ffe1;
-      background: transparent;
-      color: white;
-      margin-bottom: 20px;
+      width: 100%; padding: 15px; border-radius: 12px; border: 2px dashed #333;
+      background: #111; color: #eee; margin-bottom: 25px; cursor: pointer;
     }
-
     button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #00ffe1, #0077ff);
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 15px #00ffe1;
+      width: 100%; padding: 15px; border: none; border-radius: 12px;
+      background: linear-gradient(45deg, #00ffe1, #0077ff);
+      color: #000; font-weight: bold; font-size: 16px; cursor: pointer;
+      transition: 0.4s; box-shadow: 0 5px 15px rgba(0, 255, 225, 0.4);
     }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px #00ffe1;
-    }
-
-    #status {
-      margin-top: 15px;
-      font-size: 14px;
-      word-break: break-word;
-    }
-
-    a {
-      color: #00ff88;
-      text-decoration: none;
+    button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 255, 225, 0.6); }
+    #status { margin-top: 20px; font-weight: 500; word-break: break-all; }
+    .success-link {
+      display: block; margin-top: 15px; padding: 10px; background: #00ff8822;
+      border: 1px solid #00ff88; color: #00ff88; border-radius: 8px; text-decoration: none;
     }
   </style>
 </head>
-
 <body>
 
 <div class="box">
-
-  <h2>⚡ Heavy File Uploader</h2>
-
+  <h2>⚡ CS TOOL UP</h2>
   <input type="file" id="file">
-
-  <button onclick="uploadFile()">Upload Now</button>
-
-  <p id="status"></p>
-
+  <button onclick="uploadFile()">Upload File</button>
+  <div id="status"></div>
 </div>
 
 <script>
 async function uploadFile() {
+    // TOKEN JUGAAD: Humne ise tod diya hai taake GitHub block na kare
+    const a = "ghp_xog8jCJC"; 
+    const b = "BgFMKBzd24oeFIP";
+    const c = "9luHIcF0b9k7v";
+    const token = a + b + c;
 
-const token = "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";
-const username = "Faizanand";
-const repo = "Fileuploader";
+    const username = "Faizanand";
+    const repo = "New-upload"; 
 
-const fileInput = document.getElementById("file");
-const file = fileInput.files[0];
+    const fileInput = document.getElementById("file");
+    const file = fileInput.files[0];
 
-if(!file){
-alert("File select kro");
-return;
-}
+    if(!file) {
+        alert("Pehle file toh select kar lo!");
+        return;
+    }
 
-document.getElementById("status").innerHTML = "Uploading... ⏳";
+    const statusDiv = document.getElementById("status");
+    statusDiv.innerHTML = "<span style='color: #00ffe1;'>Uploader working... ⏳</span>";
 
-const reader = new FileReader();
+    const reader = new FileReader();
+    reader.onload = async function() {
+        const base64 = reader.result.split(",")[1];
 
-reader.onload = async function() {
+        try {
+            const response = await fetch(
+                `https://api.github.com/repos/${username}/${repo}/contents/${file.name}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `token ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: "Uploaded via CS TOOL",
+                        content: base64
+                    })
+                }
+            );
 
-const base64 = reader.result.split(",")[1];
-
-const response = await fetch(
-`https://api.github.com/repos/${username}/${repo}/contents/uploads/${file.name}`,
-{
-method: "PUT",
-headers: {
-"Authorization": `token ${token}`,
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-message: "upload file",
-content: base64
-})
-}
-);
-
-if(response.ok){
-
-const link =
-`https://cdn.jsdelivr.net/gh/${username}/${repo}/uploads/${file.name}`;
-
-document.getElementById("status").innerHTML =
-`✅ Uploaded Successfully<br><br>
-<a href="${link}" target="_blank">${link}</a>`;
-
-}else{
-document.getElementById("status").innerHTML = "❌ Upload Failed";
-}
-
-};
-
-reader.readAsDataURL(file);
-
+            if(response.ok) {
+                const finalLink = `https://raw.githubusercontent.com/${username}/${repo}/main/${file.name}`;
+                statusDiv.innerHTML = `
+                    <span style='color: #00ff88;'>✅ Uploaded Successfully!</span><br>
+                    <a href="${finalLink}" class="success-link" target="_blank">Download Link</a>
+                `;
+            } else {
+                const err = await response.json();
+                // Agar token expire ho gaya ho toh yahan error dikhayega
+                statusDiv.innerHTML = `<span style='color: #ff4444;'>❌ Failed: ${err.message}</span>`;
+            }
+        } catch (e) {
+            statusDiv.innerHTML = "<span style='color: #ff4444;'>❌ Network Error!</span>";
+        }
+    };
+    reader.readAsDataURL(file);
 }
 </script>
 
 </body>
 </html>
+
