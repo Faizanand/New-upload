@@ -1,50 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>CS TOOL - Heavy Uploader</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PREMIUM UPLOADER | CS TOOL</title>
   <style>
+    :root {
+      --bg: #0a0a0a;
+      --card-bg: #111111;
+      --accent: #ffffff;
+      --text-dim: #888888;
+      --border: #222222;
+    }
+
     body {
-      margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #000; color: white;
-      display: flex; justify-content: center; align-items: center; height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--accent);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
     }
-    .box {
-      width: 90%; max-width: 400px; padding: 30px; border-radius: 25px;
-      background: rgba(20, 20, 20, 0.9); border: 1px solid #00ffe1;
-      box-shadow: 0 0 30px rgba(0, 255, 225, 0.3); text-align: center;
+
+    /* Background aesthetic circles */
+    .bg-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%);
+      z-index: -1;
     }
-    h2 { color: #00ffe1; text-shadow: 0 0 10px #00ffe1; margin-bottom: 30px; }
+
+    .container {
+      width: 90%;
+      max-width: 420px;
+      padding: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 2px; /* Sharp professional look */
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 300;
+    }
+
+    p.subtitle {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    .upload-area {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
     input[type="file"] {
-      width: 100%; padding: 15px; border-radius: 12px; border: 2px dashed #333;
-      background: #111; color: #eee; margin-bottom: 25px; cursor: pointer;
+      display: none;
     }
+
+    .file-label {
+      display: block;
+      padding: 20px;
+      border: 1px dashed var(--border);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .file-label:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     button {
-      width: 100%; padding: 15px; border: none; border-radius: 12px;
-      background: linear-gradient(45deg, #00ffe1, #0077ff);
-      color: #000; font-weight: bold; font-size: 16px; cursor: pointer;
-      transition: 0.4s; box-shadow: 0 5px 15px rgba(0, 255, 225, 0.4);
+      width: 100%;
+      padding: 18px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 0.85rem;
     }
-    button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 255, 225, 0.6); }
-    #status { margin-top: 20px; font-weight: 500; word-break: break-all; }
+
+    button:hover {
+      background: #cccccc;
+      letter-spacing: 3px;
+    }
+
+    button:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    #status {
+      margin-top: 25px;
+      font-size: 0.85rem;
+      min-height: 20px;
+    }
+
     .success-link {
-      display: block; margin-top: 15px; padding: 10px; background: #00ff8822;
-      border: 1px solid #00ff88; color: #00ff88; border-radius: 8px; text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 2px;
+      font-size: 0.8rem;
+      transition: 0.3s;
     }
+
+    .success-link:hover {
+      opacity: 0.7;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #333;
+      border-top: 2px solid #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
-<div class="box">
-  <h2>⚡ CS TOOL UP</h2>
-  <input type="file" id="file">
-  <button onclick="uploadFile()">Upload File</button>
+<div class="bg-glow"></div>
+
+<div class="container">
+  <h2>CS TOOL</h2>
+  <p class="subtitle">HIGH-SPEED CLOUD UPLOADER</p>
+  
+  <div class="upload-area">
+    <label for="file" class="file-label" id="file-name">SELECT FILENAME</label>
+    <input type="file" id="file" onchange="updateFileName()">
+  </div>
+
+  <button id="upload-btn" onclick="uploadFile()">Execute Upload</button>
+  
   <div id="status"></div>
 </div>
 
 <script>
+function updateFileName() {
+    const input = document.getElementById('file');
+    const label = document.getElementById('file-name');
+    label.innerText = input.files[0] ? input.files[0].name.toUpperCase() : "SELECT FILENAME";
+}
+
 async function uploadFile() {
-    // TOKEN JUGAAD: Humne ise tod diya hai taake GitHub block na kare
     const a = "ghp_xog8jCJC"; 
     const b = "BgFMKBzd24oeFIP";
     const c = "9luHIcF0b9k7v";
@@ -54,15 +181,19 @@ async function uploadFile() {
     const repo = "New-upload"; 
 
     const fileInput = document.getElementById("file");
+    const btn = document.getElementById("upload-btn");
+    const statusDiv = document.getElementById("status");
     const file = fileInput.files[0];
 
     if(!file) {
-        alert("Pehle file toh select kar lo!");
+        statusDiv.innerHTML = "<span style='color: #ff4444;'>ERROR: NO FILE SELECTED</span>";
         return;
     }
 
-    const statusDiv = document.getElementById("status");
-    statusDiv.innerHTML = "<span style='color: #00ffe1;'>Uploader working... ⏳</span>";
+    // UI Updates
+    btn.disabled = true;
+    btn.innerText = "UPLOADING...";
+    statusDiv.innerHTML = '<div class="loader"></div> PROCESSING REQUEST';
 
     const reader = new FileReader();
     reader.onload = async function() {
@@ -78,7 +209,7 @@ async function uploadFile() {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        message: "Uploaded via CS TOOL",
+                        message: "System Upload: CS-TOOL-PRO",
                         content: base64
                     })
                 }
@@ -87,16 +218,20 @@ async function uploadFile() {
             if(response.ok) {
                 const finalLink = `https://raw.githubusercontent.com/${username}/${repo}/main/${file.name}`;
                 statusDiv.innerHTML = `
-                    <span style='color: #00ff88;'>✅ Uploaded Successfully!</span><br>
-                    <a href="${finalLink}" class="success-link" target="_blank">Download Link</a>
+                    <span style='color: #fff;'>SUCCESSFULLY DEPLOYED</span><br>
+                    <a href="${finalLink}" class="success-link" target="_blank">ACCESS FILENAME</a>
                 `;
+                btn.innerText = "UPLOAD COMPLETE";
             } else {
                 const err = await response.json();
-                // Agar token expire ho gaya ho toh yahan error dikhayega
-                statusDiv.innerHTML = `<span style='color: #ff4444;'>❌ Failed: ${err.message}</span>`;
+                statusDiv.innerHTML = `<span style='color: #ff4444;'>FAILED: ${err.message.toUpperCase()}</span>`;
+                btn.disabled = false;
+                btn.innerText = "RETRY UPLOAD";
             }
         } catch (e) {
-            statusDiv.innerHTML = "<span style='color: #ff4444;'>❌ Network Error!</span>";
+            statusDiv.innerHTML = "<span style='color: #ff4444;'>NETWORK AUTHENTICATION ERROR</span>";
+            btn.disabled = false;
+            btn.innerText = "RETRY UPLOAD";
         }
     };
     reader.readAsDataURL(file);
@@ -105,4 +240,3 @@ async function uploadFile() {
 
 </body>
 </html>
-
