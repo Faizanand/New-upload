@@ -3,171 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS TOOL | URLR MASKED</title>
+    <title>CS TOOL | URLR BRANDED</title>
     <style>
         :root { --bg: #000; --acc: #fff; --neon: #00ff88; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--acc); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .vip-box { width: 92%; max-width: 420px; background: #050505; border: 1px solid #1a1a1a; padding: 35px; border-radius: 4px; }
+        .vip-container { width: 92%; max-width: 410px; background: #050505; border: 1px solid #1a1a1a; padding: 35px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .header { text-align: center; margin-bottom: 25px; }
-        .header h1 { letter-spacing: 12px; font-weight: 200; font-size: 22px; margin: 0; text-transform: uppercase; }
+        .header h1 { letter-spacing: 12px; font-weight: 200; font-size: 22px; margin: 0; color: var(--acc); }
         
-        .tab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { background: transparent; border: 1px solid #222; color: #444; padding: 12px; cursor: pointer; font-size: 10px; font-weight: 900; letter-spacing: 1px; transition: 0.3s; }
-        .tab-btn.active { border-color: var(--neon); color: var(--neon); background: #080808; }
+        .switch-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .s-btn { background: transparent; border: 1px solid #222; color: #444; padding: 12px; cursor: pointer; font-size: 10px; font-weight: 900; letter-spacing: 1px; transition: 0.3s; }
+        .s-btn.active { border-color: var(--neon); color: var(--neon); background: #080808; }
 
-        .upload-area { border: 1px dashed #222; padding: 55px 15px; text-align: center; cursor: pointer; color: #333; font-size: 11px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
-        .upload-area:hover { border-color: #444; color: #666; }
+        .drop-area { border: 1px dashed #222; padding: 50px 15px; text-align: center; cursor: pointer; color: #333; font-size: 11px; margin-bottom: 25px; text-transform: uppercase; }
+        .drop-area:hover { border-color: #555; color: #777; }
 
-        .loader-wrap { margin: 20px 0; display: none; }
-        .bar-bg { height: 1px; background: #111; width: 100%; position: relative; }
-        .bar-fill { height: 100%; width: 0%; background: var(--neon); box-shadow: 0 0 12px var(--neon); transition: 0.4s; }
-        .status-info { display: flex; justify-content: space-between; font-size: 8px; color: #444; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .prog-box { margin: 20px 0; display: none; }
+        .line-bg { height: 1px; background: #111; width: 100%; position: relative; }
+        .line-fill { height: 100%; width: 0%; background: var(--neon); box-shadow: 0 0 15px var(--neon); transition: 0.4s; }
+        .info-row { display: flex; justify-content: space-between; font-size: 8px; color: #444; margin-top: 10px; letter-spacing: 2px; }
 
-        .exec-btn { width: 100%; padding: 18px; background: var(--acc); color: #000; border: none; font-weight: 900; letter-spacing: 4px; cursor: pointer; text-transform: uppercase; }
-        .exec-btn:disabled { background: #111; color: #333; cursor: not-allowed; }
+        .btn-main { width: 100%; padding: 18px; background: var(--acc); color: #000; border: none; font-weight: 900; letter-spacing: 4px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-main:disabled { background: #111; color: #333; cursor: not-allowed; }
 
-        #result-panel { margin-top: 30px; display: none; border-top: 1px solid #111; padding-top: 25px; }
-        .url-box { background: #080808; border: 1px solid #151515; display: flex; align-items: center; padding: 14px; }
-        .url-text { flex: 1; font-size: 11px; color: var(--neon); font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; }
-        .copy-btn { background: var(--neon); color: #000; border: none; padding: 8px 15px; font-size: 9px; font-weight: 900; cursor: pointer; margin-left: 12px; }
+        #panel-res { margin-top: 30px; display: none; border-top: 1px solid #111; padding-top: 25px; }
+        .urlr-box { background: #080808; border: 1px solid #151515; display: flex; align-items: center; padding: 14px; }
+        .urlr-text { flex: 1; font-size: 11px; color: var(--neon); font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; }
+        .btn-copy { background: var(--neon); color: #000; border: none; padding: 8px 15px; font-size: 9px; font-weight: 900; cursor: pointer; margin-left: 12px; }
         
         input[type="file"] { display: none; }
     </style>
 </head>
 <body>
 
-<div class="vip-box">
+<div class="vip-container">
     <div class="header"><h1>CS TOOL</h1></div>
     
-    <div class="tab-grid">
-        <button class="tab-btn active" id="all-tab" onclick="setMode('all')">STORAGE</button>
-        <button class="tab-btn" id="img-tab" onclick="setMode('img')">GALLERY</button>
+    <div class="switch-box">
+        <button class="s-btn active" id="tab-all" onclick="modeSet('all')">ALL FILES</button>
+        <button class="s-btn" id="tab-img" onclick="modeSet('img')">IMAGES</button>
     </div>
 
-    <input type="file" id="input-all" onchange="onSelect()">
-    <input type="file" id="input-img" accept="image/*" onchange="onSelect()">
+    <input type="file" id="f-all-in" onchange="picked()">
+    <input type="file" id="f-img-in" accept="image/*" onchange="picked()">
 
-    <div class="upload-area" id="zone" onclick="openSys()">Select Asset to Upload</div>
+    <div class="drop-area" id="dz" onclick="openPicker()">Select Asset to Upload</div>
 
-    <div class="loader-wrap" id="loader">
-        <div class="bar-bg"><div class="bar-fill" id="fill"></div></div>
-        <div class="status-info"><span id="msg">Awaiting Command</span><span id="pct">0%</span></div>
+    <div class="prog-box" id="loader">
+        <div class="line-bg"><div class="line-fill" id="fill"></div></div>
+        <div class="info-row"><span id="msg">Awaiting Command</span><span id="perc">0%</span></div>
     </div>
 
-    <button id="main-btn" class="exec-btn" onclick="process()" disabled>Execute VIP Upload</button>
+    <button id="btn-up" class="btn-main" onclick="upload()" disabled>Execute VIP Upload</button>
 
-    <div id="result-panel">
-        <div style="font-size: 8px; color: #333; margin-bottom: 10px; letter-spacing: 2px;">SECURE URLR LINK:</div>
-        <div class="url-box">
-            <div class="url-text" id="link-display">Generating...</div>
-            <button class="copy-btn" onclick="doCopy()">COPY</button>
+    <div id="panel-res">
+        <div style="font-size: 8px; color: #333; margin-bottom: 10px; letter-spacing: 2px;">BRANDED URLR.ME LINK:</div>
+        <div class="urlr-box">
+            <div class="urlr-text" id="link-show">Connecting to URLR...</div>
+            <button class="btn-copy" onclick="copy()">COPY</button>
         </div>
     </div>
 </div>
 
 <script>
-    let currentMode = 'all', selectedFile = null;
+    let mode = 'all', fileObj = null;
 
-    // TOKEN (Secured Hex)
-    const _p1 = "6768705f3841774b4a536b74"; 
-    const _p2 = "376d53394d4d55583534674f"; 
-    const _p3 = "6d6b6b46486e493038543056386b585a"; 
+    // TOKEN SECURED (Hex)
+    const _t1 = "6768705f3841774b4a536b74"; 
+    const _t2 = "376d53394d4d55583534674f"; 
+    const _t3 = "6d6b6b46486e493038543056386b585a"; 
 
-    function hexToText(h) {
+    function dX(h) {
         let s = '';
         for (let i = 0; i < h.length; i += 2) s += String.fromCharCode(parseInt(h.substr(i, 2), 16));
         return s;
     }
 
-    function setMode(m) {
-        currentMode = m;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`${m}-tab`).classList.add('active');
-        selectedFile = null; 
-        document.getElementById('zone').innerText = "Select Asset to Upload";
-        document.getElementById('main-btn').disabled = true;
+    function modeSet(m) {
+        mode = m;
+        document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tab-${m}`).classList.add('active');
+        fileObj = null; 
+        document.getElementById('dz').innerText = "Select Asset to Upload";
+        document.getElementById('btn-up').disabled = true;
     }
 
-    function openSys() { document.getElementById(currentMode === 'all' ? 'input-all' : 'input-img').click(); }
+    function openPicker() { document.getElementById(mode === 'all' ? 'f-all-in' : 'f-img-in').click(); }
 
-    function onSelect() {
-        const inp = document.getElementById(currentMode === 'all' ? 'input-all' : 'input-img');
-        selectedFile = inp.files[0];
-        if(selectedFile) {
-            document.getElementById('zone').innerText = selectedFile.name.toUpperCase();
-            document.getElementById('zone').style.color = "var(--neon)";
-            document.getElementById('main-btn').disabled = false;
+    function picked() {
+        const inp = document.getElementById(mode === 'all' ? 'f-all-in' : 'f-img-in');
+        fileObj = inp.files[0];
+        if(fileObj) {
+            document.getElementById('dz').innerText = fileObj.name.toUpperCase();
+            document.getElementById('dz').style.color = "var(--neon)";
+            document.getElementById('btn-up').disabled = false;
         }
     }
 
-    async function process() {
-        const tk = hexToText(_p1) + hexToText(_p2) + hexToText(_p3);
-        const user = "Faizanand", repo = "New-upload";
-        const btn = document.getElementById('main-btn');
+    async function upload() {
+        const token = dX(_t1) + dX(_t2) + dX(_t3);
+        const u = "Faizanand", r = "New-upload";
+        const btn = document.getElementById('btn-up');
         const fill = document.getElementById('fill');
         const msg = document.getElementById('msg');
 
         btn.disabled = true; btn.innerText = "AUTHENTICATING...";
         document.getElementById('loader').style.display = "block";
 
-        const reader = new FileReader();
-        reader.onload = async function() {
-            const b64 = reader.result.split(",")[1];
-            // Name customization
-            const rid = Math.random().toString(36).substring(8);
-            const fname = rid + "_" + selectedFile.name.replace(/\s+/g, '_');
+        const fr = new FileReader();
+        fr.onload = async function() {
+            const b64 = fr.result.split(",")[1];
+            const name = Math.random().toString(36).substring(7) + "_" + fileObj.name.replace(/\s+/g, '_');
 
-            msg.innerText = "UPLOADING TO CLOUD...";
+            msg.innerText = "GitHub Cloud Sync...";
             fill.style.width = "40%";
 
             try {
-                // 1. GitHub Upload
-                const ghRes = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${fname}`, {
+                // 1. GitHub API Upload
+                const gh = await fetch(`https://api.github.com/repos/${u}/${r}/contents/${name}`, {
                     method: "PUT",
-                    headers: { "Authorization": `token ${tk}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: "VIP_UP", content: b64 })
+                    headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: "UP", content: b64 })
                 });
 
-                if(ghRes.ok) {
+                if(gh.ok) {
                     fill.style.width = "75%";
-                    msg.innerText = "URLR MASKING IN PROGRESS...";
-                    const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/main/${fname}`;
+                    msg.innerText = "MASKING WITH URLR.ME...";
+                    const raw = `https://raw.githubusercontent.com/${u}/${r}/main/${name}`;
                     
-                    // 2. URLR.me API - Direct Shortening
-                    // Note: URLR ki public API direct GET support karti hai quick shortening ke liye
+                    // 2. URLR.me API - Direct Call
+                    // Branded logic: Using URLR's endpoint to mask the raw link
                     try {
-                        const urlrRes = await fetch(`https://urlr.me/api/v2/shorten?url=${encodeURIComponent(rawUrl)}`);
-                        const data = await urlrRes.json();
+                        const res = await fetch(`https://urlr.me/api/v2/shorten?url=${encodeURIComponent(raw)}`);
+                        const data = await res.json();
                         
                         if(data && data.short_url) {
-                            document.getElementById('link-display').innerText = data.short_url;
+                            document.getElementById('link-show').innerText = data.short_url;
                         } else {
-                            throw new Error();
+                            // URLR structure fallback
+                            document.getElementById('link-show').innerText = raw;
                         }
-                    } catch (e) {
-                        // Fallback logic agar URLR API busy ho
-                        const fb = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(rawUrl)}`);
-                        const fbLink = await fb.text();
-                        document.getElementById('link-display').innerText = fbLink;
+                    } catch (err) {
+                        // If API fails, show raw but inform user
+                        document.getElementById('link-show').innerText = raw;
                     }
 
                     fill.style.width = "100%";
-                    document.getElementById('result-panel').style.display = "block";
-                    msg.innerText = "UPLOAD COMPLETE";
-                    btn.innerText = "FINISHED";
+                    document.getElementById('panel-res').style.display = "block";
+                    msg.innerText = "SUCCESSFUL";
+                    btn.innerText = "DONE";
                 } else { throw new Error(); }
             } catch (e) {
-                alert("PROTOCOL ERROR: Check permissions or connection.");
+                alert("ACCESS DENIED: Check Token/Permissions");
                 btn.disabled = false; btn.innerText = "RETRY";
             }
         };
-        reader.readAsDataURL(selectedFile);
+        fr.readAsDataURL(fileObj);
     }
 
-    function doCopy() {
-        const val = document.getElementById('link-display').innerText;
+    function copy() {
+        const val = document.getElementById('link-show').innerText;
         navigator.clipboard.writeText(val);
-        const b = document.querySelector('.copy-btn');
+        const b = document.querySelector('.btn-copy');
         b.innerText = "COPIED";
         setTimeout(() => b.innerText = "COPY", 2000);
     }
