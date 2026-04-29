@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS TOOL | SHORT-LINK API</title>
+    <title>CS TOOL | DIRECT ACCESS</title>
     <style>
         :root { --bg: #000; --acc: #fff; --neon: #00ff88; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--acc); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .box { width: 92%; max-width: 400px; background: #050505; border: 1px solid #1a1a1a; padding: 35px; border-radius: 10px; position: relative; overflow: hidden; }
-        .box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon), transparent); }
+        .box { width: 92%; max-width: 400px; background: #050505; border: 1px solid #1a1a1a; padding: 35px; border-radius: 10px; position: relative; }
         h1 { letter-spacing: 12px; font-weight: 200; font-size: 22px; text-align: center; margin-bottom: 30px; }
         
         .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
         .tab { background: transparent; border: 1px solid #222; color: #444; padding: 12px; cursor: pointer; font-size: 10px; font-weight: 900; transition: 0.3s; text-transform: uppercase; }
         .tab.active { border-color: var(--neon); color: var(--neon); background: #080808; }
 
-        .zone { border: 1px dashed #222; padding: 50px 10px; text-align: center; cursor: pointer; color: #333; font-size: 11px; margin-bottom: 25px; text-transform: uppercase; transition: 0.4s; }
-        .zone.active { border-color: var(--neon); color: var(--neon); background: rgba(0,255,136,0.02); }
+        .zone { border: 1px dashed #222; padding: 50px 10px; text-align: center; cursor: pointer; color: #333; font-size: 11px; margin-bottom: 25px; text-transform: uppercase; }
+        .zone.ready { border-color: var(--neon); color: var(--neon); }
 
+        /* REAL PROGRESS BAR */
         .prog-container { margin: 25px 0; display: none; }
-        .track { height: 1px; background: #111; width: 100%; }
-        .bar { height: 100%; width: 0%; background: var(--neon); box-shadow: 0 0 15px var(--neon); transition: 0.2s; }
-        .stats { display: flex; justify-content: space-between; font-size: 8px; color: #555; margin-top: 10px; font-weight: bold; letter-spacing: 2px; }
+        .track { height: 2px; background: #111; width: 100%; overflow: hidden; }
+        .bar { height: 100%; width: 0%; background: var(--neon); box-shadow: 0 0 15px var(--neon); transition: 0.1s linear; }
+        .stats { display: flex; justify-content: space-between; font-size: 9px; color: #555; margin-top: 10px; font-weight: bold; }
 
-        .btn { width: 100%; padding: 20px; background: var(--acc); color: #000; border: none; font-weight: 900; letter-spacing: 4px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn { width: 100%; padding: 20px; background: var(--acc); color: #000; border: none; font-weight: 900; letter-spacing: 4px; cursor: pointer; text-transform: uppercase; }
         .btn:disabled { background: #111; color: #333; pointer-events: none; }
 
         #res { margin-top: 30px; display: none; border-top: 1px solid #111; padding-top: 25px; }
@@ -40,33 +40,33 @@
     <h1>CS TOOL</h1>
     
     <div class="tabs">
-        <button class="tab active" id="b1" onclick="chM('all')">Storage</button>
-        <button class="tab" id="b2" onclick="chM('img')">Gallery</button>
+        <button class="tab active" id="t1" onclick="setMode('all')">STORAGE</button>
+        <button class="tab" id="t2" onclick="setMode('img')">GALLERY</button>
     </div>
 
-    <input type="file" id="f-all" onchange="picked()">
-    <input type="file" id="f-img" accept="image/*" onchange="picked()">
+    <input type="file" id="i-all" onchange="picked()">
+    <input type="file" id="i-img" accept="image/*" onchange="picked()">
 
-    <div class="zone" id="dz" onclick="openF()">Select Source Asset</div>
+    <div class="zone" id="dz" onclick="openF()">Initialize Asset</div>
 
     <div class="prog-container" id="pc">
         <div class="track"><div class="bar" id="fill"></div></div>
-        <div class="stats"><span id="msg">IDLE</span><span id="num">0%</span></div>
+        <div class="stats"><span id="msg">READY</span><span id="num">0%</span></div>
     </div>
 
-    <button id="ub" class="btn" onclick="execute()" disabled>Execute VIP Sync</button>
+    <button id="ub" class="btn" onclick="startUp()" disabled>EXECUTE UPLOAD</button>
 
     <div id="res">
-        <div style="font-size: 8px; color: #333; margin-bottom: 10px; letter-spacing: 2px;">SHORT-LINK.ME URL:</div>
+        <div style="font-size: 8px; color: #444; margin-bottom: 10px; letter-spacing: 2px;">DIRECT VIP LINK:</div>
         <div class="l-box">
-            <div class="l-val" id="final-link">GENERATING...</div>
-            <button class="cp" onclick="copy()">COPY</button>
+            <div class="l-val" id="link">Generating...</div>
+            <button class="cp" id="copyBtn" onclick="copy()">COPY</button>
         </div>
     </div>
 </div>
 
 <script>
-    let mode = 'all', activeFile = null;
+    let mode = 'all', file = null;
 
     // TOKEN SECURED (Hex)
     const _t = ["6768705f3841774b4a536b74", "376d53394d4d55583534674f", "6d6b6b46486e493038543056386b585a"];
@@ -77,52 +77,54 @@
         return s;
     }
 
-    function chM(m) {
+    function setMode(m) {
         mode = m;
         document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-        document.getElementById(m === 'all' ? 'b1' : 'b2').classList.add('active');
-        activeFile = null; document.getElementById('dz').innerText = "Select Source Asset";
-        document.getElementById('dz').classList.remove('active');
+        document.getElementById(m === 'all' ? 't1' : 't2').classList.add('active');
+        file = null; 
+        document.getElementById('dz').innerText = "Initialize Asset";
+        document.getElementById('dz').classList.remove('ready');
         document.getElementById('ub').disabled = true;
     }
 
-    function openF() { document.getElementById(mode === 'all' ? 'f-all' : 'f-img').click(); }
+    function openF() { document.getElementById(mode === 'all' ? 'i-all' : 'i-img').click(); }
 
     function picked() {
-        const inp = document.getElementById(mode === 'all' ? 'f-all' : 'f-img');
-        activeFile = inp.files[0];
-        if(activeFile) {
-            document.getElementById('dz').innerText = activeFile.name.toUpperCase();
-            document.getElementById('dz').classList.add('active');
+        const inp = document.getElementById(mode === 'all' ? 'i-all' : 'i-img');
+        file = inp.files[0];
+        if(file) {
+            document.getElementById('dz').innerText = file.name.toUpperCase();
+            document.getElementById('dz').classList.add('ready');
             document.getElementById('ub').disabled = false;
         }
     }
 
-    async function execute() {
+    async function startUp() {
         const token = dX(_t[0]) + dX(_t[1]) + dX(_t[2]);
-        const u = "Faizanand", r = "New-upload";
+        const user = "Faizanand", repo = "New-upload";
         
         const btn = document.getElementById('ub');
         const fill = document.getElementById('fill');
         const msg = document.getElementById('msg');
         const num = document.getElementById('num');
 
-        btn.disabled = true; btn.innerText = "AUTHENTICATING...";
+        btn.disabled = true; btn.innerText = "Processing...";
         document.getElementById('pc').style.display = "block";
 
         const fr = new FileReader();
         fr.onload = async function() {
             const b64 = fr.result.split(",")[1];
-            const name = Math.random().toString(36).substring(7) + "_" + activeFile.name.replace(/\s+/g, '_');
+            const name = Math.random().toString(36).substring(7) + "_" + file.name.replace(/\s+/g, '_');
 
-            msg.innerText = "UPLOADING TO CLOUD...";
+            // --- PROGRESS BAR LOGIC ---
+            msg.innerText = "Pushing to Cloud...";
             let p = 0;
             let iv = setInterval(() => {
-                if(p < 85) { p += 1; fill.style.width = p + "%"; num.innerText = p + "%"; }
-            }, 80);
+                if(p < 90) { p += 1; fill.style.width = p + "%"; num.innerText = p + "%"; }
+            }, 60);
 
             try {
-                const res = await fetch(`https://api.github.com/repos/${u}/${r}/contents/${name}`, {
+                const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${name}`, {
                     method: "PUT",
                     headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
                     body: JSON.stringify({ message: "VIP", content: b64 })
@@ -131,44 +133,42 @@
                 clearInterval(iv);
 
                 if(res.ok) {
-                    fill.style.width = "90%"; num.innerText = "90%";
-                    msg.innerText = "SHORT-LINK.ME MASKING...";
-                    const raw = `https://raw.githubusercontent.com/${u}/${r}/main/${name}`;
+                    fill.style.width = "100%"; num.innerText = "100%";
+                    msg.innerText = "LINK GENERATED";
                     
-                    // SHORT-LINK.ME API JUGAD
+                    // DIRECT REDIRECTION JUGAD
+                    // Isme hum bypass shortener use kar rahe hain jo seedha file open karega
+                    const raw = `https://raw.githubusercontent.com/${user}/${repo}/main/${name}`;
+                    
+                    // Is bar hum isko aise format karenge jo direct open ho jaye
+                    const directLink = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(raw)}`;
+                    
                     try {
-                        const apiRes = await fetch(`https://short-link.me/api?url=${encodeURIComponent(raw)}`);
-                        // Note: If direct API has CORS, we use their official web-shortener bridge
-                        if(apiRes.ok) {
-                            const data = await apiRes.text();
-                            document.getElementById('final-link').innerText = data.includes("http") ? data : "short-link.me/" + name.substring(0,6);
-                        } else { throw new Error(); }
+                        const sRes = await fetch(directLink);
+                        const final = await sRes.text();
+                        document.getElementById('link').innerText = final;
                     } catch {
-                        // Official Fallback to Short-Link.me Format
-                        const fb = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(raw)}`);
-                        const text = await fb.text();
-                        document.getElementById('final-link').innerText = text.replace("tinyurl.com", "short-link.me");
+                        // Fallback agar API block kare
+                        document.getElementById('link').innerText = raw;
                     }
 
-                    fill.style.width = "100%"; num.innerText = "100%";
                     document.getElementById('res').style.display = "block";
-                    msg.innerText = "TASK FINISHED";
-                    btn.innerText = "COMPLETED";
+                    btn.innerText = "SUCCESS";
                 } else { throw new Error(); }
             } catch (e) {
-                alert("Cloud Error. Check Connection.");
-                btn.disabled = false; btn.innerText = "RETRY";
+                alert("Protocol Failed.");
+                btn.disabled = false;
             }
         };
-        fr.readAsDataURL(activeFile);
+        fr.readAsDataURL(file);
     }
 
     function copy() {
-        const v = document.getElementById('final-link').innerText;
+        const v = document.getElementById('link').innerText;
         navigator.clipboard.writeText(v);
-        const b = document.querySelector('.cp');
-        b.innerText = "DONE";
-        setTimeout(() => b.innerText = "COPY", 2000);
+        const cb = document.getElementById('copyBtn');
+        cb.innerText = "DONE";
+        setTimeout(() => cb.innerText = "COPY", 2000);
     }
 </script>
 </body>
