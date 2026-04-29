@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS TOOL | PRIVATE CLOUD ENGINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #000000; 
+            --surface: #0a0a0a;
+            --accent: #ffffff; 
+            --border: #1a1a1a;
+            --text-dim: #666;
+        }
+        
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        body { 
+            margin: 0; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            color: var(--accent); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+        }
+
+        /* Luxury Background Glow */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            top: 10%; left: 10%; z-index: -1;
+        }
+
+        .container { 
+            width: 90%; 
+            max-width: 450px; 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            padding: 50px 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8); 
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { 
+            letter-spacing: 12px; 
+            font-weight: 800; 
+            font-size: 24px; 
+            margin: 0; 
+            text-transform: uppercase;
+        }
+        .header p { 
+            font-size: 9px; 
+            color: var(--text-dim); 
+            letter-spacing: 4px; 
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+        
+        .mode-selector { 
+            display: flex; 
+            gap: 1px; 
+            background: var(--border);
+            padding: 1px;
+            margin-bottom: 30px; 
+            border-radius: 4px;
+        }
+
+        .mode-btn { 
+            flex: 1;
+            background: var(--surface); 
+            border: none;
+            color: var(--text-dim); 
+            padding: 14px; 
+            cursor: pointer; 
+            font-size: 10px; 
+            font-weight: 800; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mode-btn.active { 
+            background: var(--accent); 
+            color: #000; 
+        }
+
+        .upload-area { 
+            border: 1px solid var(--border); 
+            padding: 60px 20px; 
+            text-align: center; 
+            cursor: pointer; 
+            border-radius: 8px;
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom, #0d0d0d, #0a0a0a);
+        }
+
+        .upload-area:hover { border-color: #444; background: #0f0f0f; }
+        .upload-area.file-selected { border-color: var(--accent); }
+
+        .file-info { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+        .file-name { color: var(--accent); font-weight: 800; display: block; margin-top: 5px; font-size: 13px; }
+
+        .process-log { margin: 25px 0; display: none; }
+        .progress-container { height: 4px; background: #111; width: 100%; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--accent); transition: 0.1s linear; }
+        
+        .status-row { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 10px; 
+            color: var(--text-dim); 
+            margin-top: 15px; 
+            font-family: monospace;
+            text-transform: uppercase;
+        }
+
+        .main-button { 
+            width: 100%; 
+            padding: 22px; 
+            background: var(--accent); 
+            color: #000; 
+            border: none; 
+            font-weight: 800; 
+            letter-spacing: 4px; 
+            cursor: pointer; 
+            text-transform: uppercase;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .main-button:disabled { background: #1a1a1a; color: #444; cursor: not-allowed; }
+        .main-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); }
+
+        #result-section { 
+            margin-top: 35px; 
+            display: none; 
+            padding-top: 30px; 
+            border-top: 1px solid var(--border);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .link-card { 
+            background: #000; 
+            border: 1px solid var(--border); 
+            display: flex; 
+            align-items: center; 
+            padding: 8px; 
+            border-radius: 6px; 
+        }
+
+        .link-display { 
+            flex: 1; 
+            font-size: 11px; 
+            color: #888; 
+            padding: 0 15px;
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            white-space: nowrap; 
+        }
+
+        .copy-btn { 
+            background: var(--accent); 
+            color: #000; 
+            border: none; 
+            padding: 12px 20px; 
+            font-size: 10px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            border-radius: 4px;
+        }
+
+        input[type="file"] { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>CS TOOL</h1>
+        <p>Private Infrastructure v3.0</p>
+    </div>
+    
+    <div class="mode-selector">
+        <button class="mode-btn active" id="btn-all" onclick="setMode('all')">Universal</button>
+        <button class="mode-btn" id="btn-img" onclick="setMode('img')">Encrypted Media</button>
+    </div>
+
+    <input type="file" id="input-all" onchange="handleFileSelect()">
+    <input type="file" id="input-img" accept="image/*" onchange="handleFileSelect()">
+
+    <div class="upload-area" id="drop-zone" onclick="triggerInput()">
+        <div class="file-info" id="display-text">
+            REQUESTING DATA SOURCE
+            <span class="file-name">CLICK TO INITIALIZE</span>
+        </div>
+    </div>
+
+    <div class="process-log" id="log-container">
+        <div class="progress-container">
+            <div class="progress-bar" id="bar"></div>
+        </div>
+        <div class="status-row">
+            <span id="status-text">IDLE_ENGINE</span>
+            <span id="percent-text">0%</span>
+        </div>
+    </div>
+
+    <button id="exec-btn" class="main-button" onclick="executeUpload()" disabled>Authorize Upload</button>
+
+    <div id="result-section">
+        <div style="font-size: 9px; color: var(--text-dim); margin-bottom: 15px; letter-spacing: 2px; text-align: center;">SECURE ACCESS POINT GENERATED</div>
+        <div class="link-card">
+            <div class="link-display" id="final-url">Enrypting...</div>
+            <button class="copy-btn" onclick="copyResult()">COPY</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentMode = 'all';
+    let selectedFile = null;
+    const creds = ["6768705f3841774b4a536b74", "376d53394d4d55583534674f", "6d6b6b46486e493038543056386b585a"];
+    const username = "Faizanand";
+    const repo = "New-upload";
+    const baseDomain = "https://uploadmycs.netlify.app/";
+
+    function hexDecode(h) {
+        let s = '';
+        for (let i = 0; i < h.length; i += 2) s += String.fromCharCode(parseInt(h.substr(i, 2), 16));
+        return s;
+    }
+
+    function setMode(m) {
+        currentMode = m;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + m).classList.add('active');
+        selectedFile = null; 
+        document.getElementById('display-text').innerHTML = 'REQUESTING DATA SOURCE<span class="file-name">CLICK TO INITIALIZE</span>';
+        document.getElementById('drop-zone').classList.remove('file-selected');
+        document.getElementById('exec-btn').disabled = true;
+        document.getElementById('result-section').style.display = "none";
+    }
+
+    function triggerInput() { 
+        document.getElementById('input-' + currentMode).click(); 
+    }
+
+    function handleFileSelect() {
+        const input = document.getElementById('input-' + currentMode);
+        selectedFile = input.files[0];
+        if(selectedFile) {
+            document.getElementById('display-text').innerHTML = 'SOURCE READY<span class="file-name">' + selectedFile.name + '</span>';
+            document.getElementById('drop-zone').classList.add('file-selected');
+            document.getElementById('exec-btn').disabled = false;
+        }
+    }
+
+    async function executeUpload() {
+        const token = hexDecode(creds[0]) + hexDecode(creds[1]) + hexDecode(creds[2]);
+        const btn = document.getElementById('exec-btn');
+        const bar = document.getElementById('bar');
+        const status = document.getElementById('status-text');
+        const percent = document.getElementById('percent-text');
+
+        btn.disabled = true; 
+        btn.innerText = "AUTHENTICATING...";
+        document.getElementById('log-container').style.display = "block";
+
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const content = reader.result.split(",")[1];
+            const fileName = Math.random().toString(36).substring(7) + "_" + selectedFile.name.replace(/\s+/g, '_');
+
+            status.innerText = "UPLOADING_TO_SERVER";
+            let p = 0;
+            let interval = setInterval(() => {
+                if(p < 98) { 
+                    p += (p > 80 ? 0.5 : 2); 
+                    bar.style.width = p + "%"; 
+                    percent.innerText = Math.floor(p) + "%"; 
+                }
+            }, 50);
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${fileName}`, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: "System Upload", content: content })
+                });
+
+                clearInterval(interval);
+
+                if(response.ok) {
+                    bar.style.width = "100%"; 
+                    percent.innerText = "100%";
+                    status.innerText = "GEN_MASKED_URL";
+                    
+                    const rawUrl = `https://raw.githubusercontent.com/${username}/${repo}/main/${fileName}`;
+                    const maskedToken = btoa(rawUrl);
+                    const finalOutput = `${baseDomain}?file=${maskedToken}`;
+                    
+                    document.getElementById('final-url').innerText = finalOutput;
+                    document.getElementById('result-section').style.display = "block";
+                    btn.innerText = "COMPLETED";
+                } else { throw new Error(); }
+            } catch (e) {
+                alert("CRITICAL_ERROR: SYSTEM_FAILED");
+                btn.disabled = false;
+                btn.innerText = "RETRY_AUTH";
+            }
+        };
+        reader.readAsDataURL(selectedFile);
+    }
+
+    function copyResult() {
+        const text = document.getElementById('final-url').innerText;
+        navigator.clipboard.writeText(text);
+        const b = document.querySelector('.copy-btn');
+        b.innerText = "DONE";
+        setTimeout(() => b.innerText = "COPY", 2000);
+    }
+
+    // Logic to handle link clicks on the main site
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const file = params.get('file');
+        if (file) {
+            try { window.location.href = atob(file); } catch(e) {}
+        }
+    }
+</script>
+</body>
+</html>
